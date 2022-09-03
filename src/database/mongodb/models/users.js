@@ -59,9 +59,8 @@ UserSchema.methods.toJSON = function () {
 };
 
 UserSchema.statics.findByCredentials = async function (email, password) {
-  const user = User.findOne({ email });
+  const user = await User.findOne({ email });
   if (!user) throw new Error('email ou senha inválidos');
-
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) throw new Error('email ou senha inválidos');
   return user;
