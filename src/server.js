@@ -5,6 +5,8 @@ const cors = require('cors');
 const http = require('http');
 const socketio = require('socket.io');
 
+const userRoutes = require('./routes/users');
+
 const app = express();
 const server = http.createServer(app);
 // eslint-disable-next-line no-unused-vars
@@ -20,6 +22,8 @@ const io = socketio(server, {
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
+
+app.use('/users', userRoutes);
 
 const PORT = process.env.PORT;
 server.listen(PORT, () => console.info(`Server is running on port ${PORT}`));

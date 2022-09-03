@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const User = require('../database/mongodb/models/users');
 
-router.post('/', async (req, res) => {
+router.post('/create', async (req, res) => {
   try {
     const { name, email, password, picture } = req.body;
     const user = await User.create({ name, email, password, picture });
@@ -28,3 +28,5 @@ router.post('/login', async (req, res) => {
     res.status(400).json(error.message);
   }
 });
+
+module.exports = router;
