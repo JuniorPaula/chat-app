@@ -57,15 +57,15 @@ io.on('connection', (socket) => {
     io.emit('new-user', members);
   });
 
-  socket.on('join-room', async (room) => {
-    socket.join(room);
-    let roomMessages = await getLastMessagesFromRooms(room);
+  socket.on('join-room', async (newRoom, previusRoom) => {
+    socket.join(newRoom);
+    socket.leave(previusRoom);
+    let roomMessages = await getLastMessagesFromRooms(newRoom);
     roomMessages = sortRoomMessagesByDate(roomMessages);
     socket.emit('room-messages', roomMessages);
   });
 
   socket.on('message-room', async (room, content, sender, time, date) => {
-    console.log(content);
     // eslint-disable-next-line no-unused-vars
     const newMessage = await Message.create({
       content,
