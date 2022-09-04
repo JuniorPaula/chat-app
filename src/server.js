@@ -17,13 +17,23 @@ const io = socketio(server, {
   },
 });
 
-// const rooms = ['geral', 'RH', 'financeiro', 'desenvolvimento'];
+const rooms = ['geral', 'RH', 'financeiro', 'desenvolvimento'];
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 
 app.use('/users', userRoutes);
+
+app.get('/rooms', (req, res) => {
+  res.json(rooms);
+});
+
+io.on('connection', (socket) => {
+  socket.on('join-room', async (room) => {
+    socket.join(room);
+  });
+});
 
 const PORT = process.env.PORT;
 server.listen(PORT, () => console.info(`Server is running on port ${PORT}`));
