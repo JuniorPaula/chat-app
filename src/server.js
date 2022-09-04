@@ -32,7 +32,7 @@ app.get('/rooms', (req, res) => {
 
 async function getLastMessagesFromRooms(room) {
   let roomMessages = await Message.aggregate([
-    { $match: { $to: room } },
+    { $match: { to: room } },
     { $group: { _id: '$date', messagesBydate: { $push: '$$ROOT' } } },
   ]);
 
@@ -62,6 +62,42 @@ io.on('connection', (socket) => {
     let roomMessages = await getLastMessagesFromRooms(room);
     roomMessages = sortRoomMessagesByDate(roomMessages);
     socket.emit('room-messages', roomMessages);
+  });
+
+  socket.on('message-room', async (room, content, sender, time, date) => {
+    console.log(content);
+    // eslint-disable-next-line no-unused-vars
+    const newMessage = await Message.create({
+      content,
+      from: sender,
+      time,
+      date,
+      to: room,
+    });
+    let roomMessage = await getLastMessagesFromRooms(room);
+    roomMessage = sortRoomMessagesByDate(roomMessage);
+
+    io.to(room).emit('room-message', roomMessage);
+
+    socket.broadcast.emit('notifications', room);
+  });
+
+  app.delete('/users/logout', async (req, res) => {
+    try {
+      const { _id, newMessage } = req.body;
+      const user = await User.findById(_id);
+      user.status = 'offline';
+      user.newMessage = newMessage;
+      await user.save();
+      const members = await User.find();
+
+      socket.broadcast.emit('new-user', members);
+
+      res.status(200).send();
+    } catch (error) {
+      console.log(error);
+      res.status(400).send();
+    }
   });
 });
 
