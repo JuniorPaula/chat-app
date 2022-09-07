@@ -8,6 +8,10 @@
 
 Este é a parte **backend** do desenvolvimento do projeto ***chat app com socket*** utilizando o protocolo **WSL**. 
 
+Para que o projeto funcione por completo é necessário o download da parte do ***client**.
+
+Baixe o projeto aqui: [https://github.com/JuniorPaula/react-chat-app](https://github.com/JuniorPaula/react-chat-app)
+
 Os requisitos necessários são:
 
 - Node
