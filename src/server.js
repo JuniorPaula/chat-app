@@ -18,7 +18,7 @@ const io = socketio(server, {
   },
 });
 
-const rooms = ['geral', 'RH', 'financeiro', 'desenvolvimento'];
+const rooms = ['Amarela', 'Azul', 'Roxa', 'Vermelha'];
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
